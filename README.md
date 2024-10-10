@@ -1,4 +1,4 @@
- """# MQTT Subscriber with Mosquitto Broker
+## MQTT Subscriber with Mosquitto Broker
 
 This project sets up an MQTT subscriber using Python and the `paho-mqtt` library. The subscriber listens for messages from simulated devices using a Mosquitto broker and logs received messages and errors into separate log files for easy monitoring and troubleshooting.
 
