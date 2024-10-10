@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto-broker
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+
+  mqtt-subscriber:
+    build: .
+    container_name: mqtt-subscriber
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+    volumes:
+      - ./received_messages.log:/app/received_messages.log
+      - ./errors.log:/app/errors.log
+
