@@ -49,7 +49,7 @@ Set up the Mosquitto MQTT broker using Docker Compose. The broker will be access
      ```bash
      mosquitto_sub -h localhost -p 1883 -t "test/topic"
      ```
-   - Publish the content under the same topic from other terminal using **mosquitto_pub**.
+   - Publish the content under the same topic from other terminal using **mosquitto_pub** with some message.
    ```bash
      mosquitto_pub -h localhost -p 1883 -t "test/topic" -m "Hello, PowerPal at Maynooth"
    ```
