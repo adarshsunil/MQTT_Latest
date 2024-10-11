@@ -54,7 +54,7 @@ Develop an MQTT subscriber that listens for incoming messages from simulated dev
 
 1. **Navigate to the Subscriber Folder**:
    ```bash
-   cd subscriber
+   cd mqtt_subscriber
    ```
 
 2. **Configure Environment Variables**:
@@ -68,7 +68,7 @@ Develop an MQTT subscriber that listens for incoming messages from simulated dev
 3. **Run the Subscriber**:
    Execute the following command to start the subscriber:
    ```bash
-   python mqtt_subscriber.py
+   python3 mqtt_subscriber.py
    ```
    The subscriber will connect to the Mosquitto broker and log messages to `received_messages.log`.
 
