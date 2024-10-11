@@ -19,7 +19,7 @@ Set up the Mosquitto MQTT broker using Docker Compose. The broker will be access
 
 1. **Clone the Repository**:
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/adarshsunil/MQTT_Latest/tree/master
    cd <repository-folder>
    ```
 
