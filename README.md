@@ -43,6 +43,10 @@ Set up the Mosquitto MQTT broker using Docker Compose. The broker will be access
 
 5. **Verify the Setup**:
    Use an MQTT client or simulator to connect to the broker on `localhost:1883` to ensure it is running.
+   Testing publish and subscribe with Mosquitto. 
+   First subscribe to a particular topic (Here ‘test/topic’) with **mosquitto_sub**. 
+   Publish the content under the same topic from other terminal using **mosquitto_pub**.
+
 
 ## Task 2: Implement MQTT Subscriber for Receiving Messages
 
