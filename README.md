@@ -1,140 +1,112 @@
-## MQTT Subscriber with Mosquitto Broker
 
-This project sets up an MQTT subscriber using Python and the `paho-mqtt` library. The subscriber listens for messages from simulated devices using a Mosquitto broker and logs received messages and errors into separate log files for easy monitoring and troubleshooting.
+# MQTT with Mosquitto Broker using Docker Compose
 
-## Features
-
-- **Dockerized Setup**: Uses **Docker** and **Docker Compose** for easy setup and deployment.
-- **Pattern-Based Subscription**: Subscribes to `devices/+/status` to receive messages from multiple devices.
-- **Logging**: Logs received messages to `received_messages.log` and errors to `errors.log`.
-- **Resilience**: Supports automatic reconnection to the broker and logs connection issues.
+This repository contains three tasks related to setting up and using an MQTT broker with Mosquitto using Docker Compose. Follow the instructions below to complete each task.
 
 ## Prerequisites
 
-- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed on your system.
-- A [GitHub](https://github.com/) account (for cloning this repository).
+- Docker and Docker Compose installed on your machine.
+- Basic knowledge of MQTT and Docker.
+- Clone this repository to your local machine.
 
-## Getting Started
+## Task 1: Set Up Mosquitto Broker Using Docker Compose
 
-### 1. Clone the Repository
+### Description
 
-Clone this repository to your local machine:
+Set up the Mosquitto MQTT broker using Docker Compose. The broker will be accessible on the default MQTT port (1883) and will be configured to allow device connections.
 
-\`\`\`bash
-git clone git@github.com:adarshsunil/MQTT_Mosquitto.git
-cd MQTT_Mosquitto/mosquitto-docker
-\`\`\`
+### Instructions
 
-### 2. Environment Configuration
+1. **Clone the Repository**:
+   ```bash
+   git clone <your-repo-url>
+   cd <repository-folder>
+   ```
 
-The `config.env` file is located in the `mqtt-subscriber` subfolder and contains the configuration for the MQTT subscriber. You can adjust the settings if needed:
+2. **Navigate to the Mosquitto Configuration**:
+   ```bash
+   cd mosquitto
+   ```
 
-\`\`\`env
-MQTT_BROKER_HOST=mosquitto
-MQTT_BROKER_PORT=1883
-MQTT_CLIENT_ID=mqtt_subscriber
-\`\`\`
+3. **Start the Mosquitto Broker**:
+   Use Docker Compose to start the Mosquitto service:
+   ```bash
+   docker-compose up -d
+   ```
+   The broker will now be accessible on `localhost:1883`.
 
-- `MQTT_BROKER_HOST`: Hostname of the MQTT broker.
-- `MQTT_BROKER_PORT`: Port number for the broker (default is `1883`).
-- `MQTT_CLIENT_ID`: A unique client ID for the subscriber.
+4. **Stop the Mosquitto Broker**:
+   To stop the broker, run:
+   ```bash
+   docker-compose down
+   ```
 
-### 3. Build and Run the Docker Containers
+5. **Verify the Setup**:
+   Use an MQTT client or simulator to connect to the broker on `localhost:1883` to ensure it is running.
 
-Build and start the Mosquitto broker and the MQTT subscriber using Docker Compose:
+## Task 2: Implement MQTT Subscriber for Receiving Messages
 
-\`\`\`bash
-docker-compose build
-docker-compose up -d
-\`\`\`
+### Description
 
-This command will:
-- Start the **Mosquitto broker** on port `1883`.
-- Start the **MQTT subscriber** to listen for messages on `devices/+/status`.
+Develop an MQTT subscriber that listens for incoming messages from simulated devices and logs them to a `received_messages.log` file.
 
-### 4. Simulate Device Messages
+### Instructions
 
-To test the setup, you can simulate devices sending messages using the `mosquitto_pub` command (make sure `mosquitto-clients` is installed):
+1. **Navigate to the Subscriber Folder**:
+   ```bash
+   cd subscriber
+   ```
 
-\`\`\`bash
-mosquitto_pub -h localhost -p 1883 -t "devices/device1/status" -m "Device 1 is online"
-mosquitto_pub -h localhost -p 1883 -t "devices/device2/status" -m "Device 2 is active"
-\`\`\`
+2. **Configure Environment Variables**:
+   Set up the environment variables in a `.env` file:
+   ```bash
+   BROKER_HOST=localhost
+   BROKER_PORT=1883
+   SUBSCRIBE_TOPIC=devices/+/status
+   ```
 
-### 5. View Logs
+3. **Run the Subscriber**:
+   Execute the following command to start the subscriber:
+   ```bash
+   python mqtt_subscriber.py
+   ```
+   The subscriber will connect to the Mosquitto broker and log messages to `received_messages.log`.
 
-Check the logs to see the messages received and any errors:
+4. **Check Received Messages**:
+   Open the `received_messages.log` file to see the logged messages:
+   ```bash
+   tail -f received_messages.log
+   ```
 
-- **View received messages**:
+## Task 3: Error Logging for MQTT Subscriber
 
-  \`\`\`bash
-  cat mqtt-subscriber/received_messages.log
-  \`\`\`
+### Description
 
-- **View error logs**:
+Implement error handling for the MQTT subscriber to ensure any issues (such as timeouts, disconnections, etc.) are logged to `errors.log`.
 
-  \`\`\`bash
-  cat mqtt-subscriber/errors.log
-  \`\`\`
+### Instructions
 
-### 6. Stop the Containers
+1. **Error Handling Configuration**:
+   Make sure the `mqtt_subscriber.py` file includes proper error handling and logging to `errors.log`.
 
-To stop the Mosquitto broker and MQTT subscriber, run:
+2. **Run the Subscriber with Error Logging**:
+   Start the subscriber as mentioned in Task 2:
+   ```bash
+   python mqtt_subscriber.py
+   ```
 
-\`\`\`bash
-docker-compose down
-\`\`\`
-
-## Project Structure
-
-\`\`\`
-mosquitto-docker/
-│
-├── mqtt-subscriber/
-│   ├── mqtt_subscriber.py     # Python script for the MQTT subscriber.
-│   ├── config.env             # Environment variables for configuration.
-│   ├── received_messages.log  # Logs of received messages (auto-generated).
-│   ├── errors.log             # Logs of errors (auto-generated).
-│
-├── Dockerfile                 # Dockerfile for building the subscriber image.
-├── docker-compose.yml         # Docker Compose file for setting up the services.
-├── mosquitto/
-│   ├── config/
-│   │   └── mosquitto.conf     # Configuration for the Mosquitto broker.
-│   ├── data/                  # Data directory for Mosquitto.
-│   └── log/                   # Log directory for Mosquitto.
-└── README.md                  # Documentation for setting up the project.
-\`\`\`
+3. **Check Error Logs**:
+   Any disconnections or errors will be logged in `errors.log`. Use the following command to view them:
+   ```bash
+   tail -f errors.log
+   ```
 
 ## Notes
 
-- **Security**: The current configuration allows anonymous connections for testing purposes. For production, update `mosquitto.conf` to require authentication and enable TLS/SSL for secure communication.
-- **Logs**: The `received_messages.log` and `errors.log` files are created automatically when the subscriber starts receiving messages or encounters errors.
+- Modify the `docker-compose.yml` and environment variables as needed for your setup.
+- Ensure that Docker is running before starting the Mosquitto broker.
+- Feel free to adjust the `mqtt_subscriber.py` script for specific requirements.
 
-## Troubleshooting
+## Conclusion
 
-- If you encounter issues with `docker-compose`, ensure that Docker and Docker Compose are installed correctly on your system.
-- If the MQTT subscriber does not receive messages, check that the `MQTT_BROKER_HOST` is set correctly in `config.env`.
-- Use the `docker-compose logs` command to see detailed logs from the running containers:
-
-  \`\`\`bash
-  docker-compose logs mosquitto
-  docker-compose logs mqtt-subscriber
-  \`\`\`
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-Feel free to submit issues or pull requests if you would like to improve this project. Contributions are welcome!
-"""
-
-# Write the content to a README.md file
-readme_path = "/mnt/data/README.md"
-with open(readme_path, "w") as f:
-    f.write(readme_content)
-
-readme_path
-
+By following the above steps, you should be able to set up a Mosquitto MQTT broker, subscribe to messages, and handle errors effectively. If you encounter any issues, check the `errors.log` for troubleshooting.
